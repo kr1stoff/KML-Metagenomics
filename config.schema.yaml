@@ -1,0 +1,112 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+required:
+  - samples_tsv
+  - workflow
+  - conda
+  - threads
+  - database
+  - software
+  - fastp
+  - bowtie2
+  - megahit
+  - cd_hit
+properties:
+  samples_tsv:
+    type: string
+    description: "样本输入表路径 (TSV 三列: 样本ID, R1路径, R2路径, 无表头)"
+  workflow:
+    type: object
+    required: [steps]
+    properties:
+      steps:
+        type: array
+        description: "启用的分析步骤"
+        items:
+          type: string
+          enum:
+            - fastp
+            - fastqc
+            - multiqc
+            - host_removal
+            - assembly
+            - gene_prediction
+            - gene_clustering
+            - quantification
+  conda:
+    type: object
+    required: [qc, basic2, meta]
+    properties:
+      qc:
+        type: string
+        description: "质控工具 conda 环境名 (fastp, seqtk, fastqc, multiqc)"
+      basic2:
+        type: string
+        description: "基础工具 conda 环境名 (bowtie2, samtools)"
+      meta:
+        type: string
+        description: "宏基因组工具 conda 环境名 (megahit, cd-hit)"
+  threads:
+    type: object
+    required: [low, medium, high]
+    properties:
+      low:
+        type: integer
+        minimum: 1
+        description: "低线程数"
+      medium:
+        type: integer
+        minimum: 1
+        description: "中线程数"
+      high:
+        type: integer
+        minimum: 1
+        description: "高线程数"
+  database:
+    type: object
+    required: [host_reference]
+    properties:
+      host_reference:
+        type: string
+        description: "宿主参考基因组 fasta 路径 (bowtie2 index 前缀)"
+  software:
+    type: object
+    required: [metagenemark_bin, metagenemark_model]
+    properties:
+      metagenemark_bin:
+        type: string
+        description: "MetaGeneMark gmhmmp 可执行文件路径"
+      metagenemark_model:
+        type: string
+        description: "MetaGeneMark 模型文件路径"
+  fastp:
+    type: object
+    required: [extra]
+    properties:
+      extra:
+        type: string
+        description: "fastp 额外参数"
+  bowtie2:
+    type: object
+    required: [host_removal_extra, mapping_extra]
+    properties:
+      host_removal_extra:
+        type: string
+        description: "bowtie2 去宿主比对额外参数"
+      mapping_extra:
+        type: string
+        description: "bowtie2 基因定量比对额外参数"
+  megahit:
+    type: object
+    required: [extra]
+    properties:
+      extra:
+        type: string
+        description: "megahit 组装额外参数"
+  cd_hit:
+    type: object
+    required: [extra]
+    properties:
+      extra:
+        type: string
+        description: "cd-hit 聚类额外参数"

@@ -1,0 +1,54 @@
+# KML-Metagenomics 宏基因组分析流程配置文件
+
+# 样本输入表: 三列 (样本ID, R1路径, R2路径), TSV格式, 无表头
+samples_tsv: "input.tsv"
+
+# 流程步骤开关
+workflow:
+  steps:
+    - fastp          # 质控过滤
+    - fastqc         # 质控报告
+    - multiqc        # 汇总报告
+    - host_removal   # 去宿主
+    - assembly       # 宏基因组组装
+    - gene_prediction  # 基因预测
+    - gene_clustering  # 基因去冗余
+    - quantification   # 基因丰度定量
+
+# Conda 环境
+conda:
+  qc: "qc"
+  basic2: "basic2"
+  meta: "meta"
+
+# 线程分级
+threads:
+  low: 4
+  medium: 8
+  high: 16
+
+# 参考数据库
+database:
+  host_reference: "/data/mengxf/Database/reference/hg19/hg19.fa"
+
+# 第三方软件路径
+software:
+  metagenemark_bin: "/data/mengxf/Software/MetaGeneMark_linux_64/mgm/gmhmmp"
+  metagenemark_model: "/data/mengxf/Software/MetaGeneMark_linux_64/mgm/MetaGeneMark_v1.mod"
+
+# fastp 参数
+fastp:
+  extra: "-g -q 5 -u 50 -n 15 -l 150 --overlap_diff_limit 1 --overlap_diff_percent_limit 10"
+
+# bowtie2 参数
+bowtie2:
+  host_removal_extra: "--end-to-end --sensitive --no-hd --no-sq -I 200 -X 400"
+  mapping_extra: "--end-to-end --sensitive --no-hd --no-sq -I 200 -X 400"
+
+# megahit 组装参数
+megahit:
+  extra: "--presets meta-large -m 64000000000"
+
+# cd-hit 聚类参数
+cd_hit:
+  extra: "-G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 5 -M 8000"
