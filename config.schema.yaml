@@ -7,10 +7,7 @@ required:
   - threads
   - database
   - software
-  - fastp
-  - bowtie2
-  - megahit
-  - cd_hit
+  - params
 properties:
   samples_tsv:
     type: string
@@ -35,17 +32,26 @@ properties:
             - quantification
   conda:
     type: object
-    required: [qc, basic2, meta]
+    required: [python, fastqc, multiqc, fastp, bowtie2, megahit]
     properties:
-      qc:
+      python:
         type: string
-        description: "质控工具 conda 环境名 (fastp, seqtk, fastqc, multiqc)"
-      basic2:
+        description: "Python conda 环境名"
+      fastqc:
         type: string
-        description: "基础工具 conda 环境名 (bowtie2, samtools)"
-      meta:
+        description: "fastqc conda 环境名"
+      multiqc:
         type: string
-        description: "宏基因组工具 conda 环境名 (megahit, cd-hit)"
+        description: "multiqc conda 环境名"
+      fastp:
+        type: string
+        description: "fastp conda 环境名"
+      bowtie2:
+        type: string
+        description: "bowtie2 conda 环境名"
+      megahit:
+        type: string
+        description: "megahit conda 环境名"
   threads:
     type: object
     required: [low, medium, high]
@@ -79,34 +85,26 @@ properties:
       metagenemark_model:
         type: string
         description: "MetaGeneMark 模型文件路径"
-  fastp:
+  params:
     type: object
-    required: [extra]
+    required: [fastp, bowtie2, megahit, cd_hit]
     properties:
-      extra:
+      fastp:
         type: string
-        description: "fastp 额外参数"
-  bowtie2:
-    type: object
-    required: [host_removal_extra, mapping_extra]
-    properties:
-      host_removal_extra:
+        description: "fastp 质控过滤参数"
+      bowtie2:
+        type: object
+        required: [host_removal, mapping]
+        properties:
+          host_removal:
+            type: string
+            description: "bowtie2 去宿主比对参数"
+          mapping:
+            type: string
+            description: "bowtie2 基因定量比对参数"
+      megahit:
         type: string
-        description: "bowtie2 去宿主比对额外参数"
-      mapping_extra:
+        description: "megahit 组装参数"
+      cd_hit:
         type: string
-        description: "bowtie2 基因定量比对额外参数"
-  megahit:
-    type: object
-    required: [extra]
-    properties:
-      extra:
-        type: string
-        description: "megahit 组装额外参数"
-  cd_hit:
-    type: object
-    required: [extra]
-    properties:
-      extra:
-        type: string
-        description: "cd-hit 聚类额外参数"
+        description: "cd-hit 聚类参数"

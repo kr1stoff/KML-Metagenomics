@@ -5,37 +5,43 @@ megahit 宏基因组组装 + seqtk 过滤 (>500bp)
 
 rule megahit:
     input:
-        r1="{sample}_host_removed.1.fastq",
-        r2="{sample}_host_removed.2.fastq",
+        r1=rules.gunzip_host_removed.output.r1,
+        r2=rules.gunzip_host_removed.output.r2,
     output:
-        directory("{sample}_megahit"),
+        dir=directory("megahit/{sample}"),
+        fa="megahit/{sample}/final.contigs.fa",
     benchmark:
         ".log/assembly/megahit/{sample}.megahit.bm"
     log:
         ".log/assembly/megahit/{sample}.megahit.log",
     conda:
-        config["conda"]["meta"]
+        config["conda"]["megahit"]
     threads: config["threads"]["high"]
     params:
-        extra=config["megahit"]["extra"],
+        extra=config["params"]["megahit"],
     shell:
-        "megahit {params.extra} -t {threads} "
-        "-1 {input.r1} -2 {input.r2} "
-        "-o {output} "
-        "2> {log}"
+        """
+        # 没有 forcewrite 参数, 需要先删除旧的输出文件夹
+        if [ -d {output.dir} ]; then 
+            rm -rf {output.dir}
+        fi
+        megahit {params.extra} -t {threads} -1 {input.r1} -2 {input.r2} -o {output.dir} 2> {log}
+        """
 
 
+# 保留长度 > 500bp 的 contig
 rule seqtk_filter_contigs:
-    """保留长度 > 500bp 的 contig"""
     input:
-        "{sample}_megahit/final.contigs.fa",
+        rules.megahit.output.fa,
     output:
-        "{sample}.contigs.gt500.fa",
+        "megahit/contigs_gt500/{sample}.fa",
     benchmark:
         ".log/assembly/seqtk/{sample}.seqtk_gt500.bm"
     log:
         ".log/assembly/seqtk/{sample}.seqtk_gt500.log",
     conda:
-        config["conda"]["qc"]
+        config["conda"]["seqtk"]
+    params:
+        "-L 500",
     shell:
-        "seqtk seq -L 500 {input} > {output} 2> {log}"
+        "seqtk seq {params} {input} > {output} 2> {log}"

@@ -7,23 +7,29 @@ import pandas as pd
 
 
 configfile: workflow.source_path("config.yaml")
+
+
 config_schema: workflow.source_path("config.schema.yaml")
 
 # 读取样本表
-samples = pd.read_csv(config["samples_tsv"], sep="\t", header=None, dtype=str)
-samples.columns = ["sample_id", "fq1", "fq2"]
+samples_df = pd.read_csv(config["samples_tsv"], sep="\t", header=None, dtype=str)
+samples_df.columns = ["sample", "fq1", "fq2"]
+samples = samples_df["sample"].tolist()
 
 
 rule all:
     input:
-        expand("{sample}.cd-hit.bowtie2.sorted.bam",
-               sample=samples["sample_id"].tolist()),
-        "qc/multiqc_data/multiqc_report.html",
+        expand("megahit/contigs_gt500/{sample}.fa", sample=samples),
+        "qc/multiqc/multiqc_report.html",
+        "qc/fastp/fastp.stats.xlsx",
 
 
-include: "rules/qc.smk"
+include: "rules/rawdata.smk"
+include: "rules/fastqc.smk"
 include: "rules/host_removal.smk"
 include: "rules/assembly.smk"
-include: "rules/gene_prediction.smk"
-include: "rules/gene_clustering.smk"
-include: "rules/quantification.smk"
+
+
+# include: "rules/gene_prediction.smk"
+# include: "rules/gene_clustering.smk"
+# include: "rules/quantification.smk"
