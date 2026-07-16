@@ -62,8 +62,7 @@ rule fastp_stats_summary:
     input:
         expand("qc/fastp/{sample}.json", sample=samples),
     output:
-        tsv="qc/fastp/fastp.stats.tsv",
-        excel="qc/fastp/fastp.stats.xlsx",
+        "qc/fastp/fastp.stats.tsv",
     benchmark:
         ".log/qc/fastp/fastp_stats_summary.bm"
     log:

@@ -21,7 +21,7 @@ rule all:
     input:
         expand("megahit/contigs_gt500/{sample}.fa", sample=samples),
         "qc/multiqc/multiqc_report.html",
-        "qc/fastp/fastp.stats.xlsx",
+        "upload/data_process_stats.xlsx",
 
 
 include: "rules/rawdata.smk"
