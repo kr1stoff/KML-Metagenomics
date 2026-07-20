@@ -23,9 +23,11 @@ rule megahit:
         """
         # 没有 forcewrite 参数, 需要先删除旧的输出文件夹
         if [ -d {output.dir} ]; then 
-            rm -rf {output.dir}
+            rm -r {output.dir}
         fi
         megahit {params.extra} -t {threads} -1 {input.r1} -2 {input.r2} -o {output.dir} 2> {log}
+        # 删除中间文件, 很大
+        rm -r {output.dir}/intermediate_contigs
         """
 
 

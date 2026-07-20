@@ -19,7 +19,7 @@ samples = samples_df["sample"].tolist()
 
 rule all:
     input:
-        expand("megahit/contigs_gt500/{sample}.fa", sample=samples),
+        expand("gene_prediction/{sample}.gm.gt100bp.fna", sample=samples),
         "qc/multiqc/multiqc_report.html",
         "upload/data_process_stats.xlsx",
 
@@ -28,8 +28,7 @@ include: "rules/rawdata.smk"
 include: "rules/fastqc.smk"
 include: "rules/host_removal.smk"
 include: "rules/assembly.smk"
+include: "rules/gene_prediction.smk"
 
-
-# include: "rules/gene_prediction.smk"
 # include: "rules/gene_clustering.smk"
 # include: "rules/quantification.smk"

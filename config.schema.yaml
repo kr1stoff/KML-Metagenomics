@@ -32,7 +32,7 @@ properties:
             - quantification
   conda:
     type: object
-    required: [python, fastqc, multiqc, fastp, bowtie2, megahit]
+    required: [python, fastqc, multiqc, fastp, bowtie2, megahit, seqtk]
     properties:
       python:
         type: string
@@ -52,6 +52,9 @@ properties:
       megahit:
         type: string
         description: "megahit conda 环境名"
+      seqtk:
+        type: string
+        description: "seqtk conda 环境名"
   threads:
     type: object
     required: [low, medium, high]
@@ -70,24 +73,24 @@ properties:
         description: "高线程数"
   database:
     type: object
-    required: [host_reference]
+    required: [host_reference, metagenemark_model]
     properties:
       host_reference:
         type: string
         description: "宿主参考基因组 fasta 路径 (bowtie2 index 前缀)"
-  software:
-    type: object
-    required: [metagenemark_bin, metagenemark_model]
-    properties:
-      metagenemark_bin:
-        type: string
-        description: "MetaGeneMark gmhmmp 可执行文件路径"
       metagenemark_model:
         type: string
         description: "MetaGeneMark 模型文件路径"
+  software:
+    type: object
+    required: [gmhmmp]
+    properties:
+      gmhmmp:
+        type: string
+        description: "MetaGeneMark gmhmmp 可执行文件路径"
   params:
     type: object
-    required: [fastp, bowtie2, megahit, cd_hit]
+    required: [fastp, bowtie2, megahit, cd_hit, gmhmmp]
     properties:
       fastp:
         type: string
@@ -108,3 +111,6 @@ properties:
       cd_hit:
         type: string
         description: "cd-hit 聚类参数"
+      gmhmmp:
+        type: string
+        description: "MetaGeneMark gmhmmp 运行参数"

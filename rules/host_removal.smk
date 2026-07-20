@@ -8,8 +8,8 @@ rule bowtie2_host_removal:
         r1=rules.fastp.output.trimmed[0],
         r2=rules.fastp.output.trimmed[1],
     output:
-        r1="host_removal/{sample}_host_removed.1.fastq.gz",
-        r2="host_removal/{sample}_host_removed.2.fastq.gz",
+        r1=temp("host_removal/{sample}_host_removed.1.fastq.gz"),
+        r2=temp("host_removal/{sample}_host_removed.2.fastq.gz"),
         sam=temp("host_removal/{sample}.bowtie2.sam"),
     benchmark:
         ".log/host_removal/bowtie2/{sample}.bowtie2_host_removal.bm"
