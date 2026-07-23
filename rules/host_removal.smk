@@ -58,7 +58,7 @@ rule nonhost_seqtk_size:
     log:
         ".log/host_removal/size/{sample}.size.log",
     conda:
-        config["conda"]["seqtk"],
+        config["conda"]["seqtk"]
     shell:
         "seqtk size {input} > {output} 2> {log}"
 
@@ -76,7 +76,7 @@ rule merge_nonhost_file:
         for size_file in input:
             se_nonhost_bases = open(size_file, "r").read().strip().split("\t")[1]
             # 双端
-            nonhost_bases = str(int(se_nonhost_bases)*2)
+            nonhost_bases = str(int(se_nonhost_bases) * 2)
             sample = size_file.split("/")[-1].split(".")[0]
             print(f"{sample}\t{nonhost_bases}\n", file=f)
         f.close()

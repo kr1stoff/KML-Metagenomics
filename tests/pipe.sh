@@ -18,6 +18,7 @@ seqtk seq -L 500 megahit/final.contigs.fa > SRR23604269.contigs.gt500.fa
 /data/mengxf/Software/MetaGeneMark_linux_64/mgm/gmhmmp -m /data/mengxf/Software/MetaGeneMark_linux_64/mgm/MetaGeneMark_v1.mod -a -d -f G -p 1 SRR23604269.contigs.gt500.fa -o SRR23604269.gm.gff -A SRR23604269.gm.faa -D SRR23604269.gm.fna -L SRR23604269.gm.log
 # 保留大于 100bp 的序列
 seqtk seq -L 100 SRR23604269.gm.fna > SRR23604269.gm.gt100bp.fna
+
 # 基因去冗余. -T 线程, -M 内存
 mamba -n meta run cd-hit -T 16 -G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 5 -M 8000 -i SRR23604269.gm.gt100bp.fna -o SRR23604269.cd-hit.fna
 # bowtie2 比对 fastq 到去冗余后的基因

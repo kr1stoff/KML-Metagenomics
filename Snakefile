@@ -19,7 +19,7 @@ samples = samples_df["sample"].tolist()
 
 rule all:
     input:
-        expand("gene_prediction/{sample}.gm.gt100bp.fna", sample=samples),
+        "gene_prediction/gene_catalogue.fna",
         "qc/multiqc/multiqc_report.html",
         "upload/data_process_stats.xlsx",
 
@@ -30,5 +30,5 @@ include: "rules/host_removal.smk"
 include: "rules/assembly.smk"
 include: "rules/gene_prediction.smk"
 
-# include: "rules/gene_clustering.smk"
-# include: "rules/quantification.smk"
+
+# include: "rules/gene_quantification.smk"
