@@ -5,8 +5,8 @@ bowtie2 去宿主 + 解压 (供 megahit 使用)
 
 rule bowtie2_host_removal:
     input:
-        r1=rules.fastp.output.trimmed[0],
-        r2=rules.fastp.output.trimmed[1],
+        r1=rules.fastp.output.r1,
+        r2=rules.fastp.output.r2,
     output:
         r1=temp("host_removal/{sample}_host_removed.1.fastq.gz"),
         r2=temp("host_removal/{sample}_host_removed.2.fastq.gz"),

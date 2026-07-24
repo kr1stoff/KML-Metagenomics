@@ -25,6 +25,7 @@ conda:
   megahit: meta
   seqtk: basic
   cd_hit: meta
+  samtools: basic
 
 # 线程分级
 threads:
@@ -49,6 +50,7 @@ params:
   # megahit -m memory参数宏基因组推荐 64G 以上, 按照当前服务器的线程数, 内存数进行调整. 
   # 当前服务器为 32 线程, 256G 内存. -m 64000000000 -t 16 (64G内存 + 16线程)
   megahit: "--presets meta-large -m 64000000000"
-  # cd-hit 内存 8G
-  cd_hit: "-G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 5 -M 64000"
+  # cd-hit 内存 64G
+  # Claude: -n 参数 word length 5 -> 8, 5 速度太慢了
+  cd_hit: "-G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 8 -M 64000"
   gmhmmp: "-a -d -f G -p 1"

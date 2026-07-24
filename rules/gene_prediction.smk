@@ -80,4 +80,5 @@ rule cd_hit:
     params:
         extra=config["params"]["cd_hit"],
     shell:
-        "cd-hit -T {threads} {params.extra} -i {input} -o {output} 2> {log}"
+        # protein 用 cd-hit, nucleotide 用 cd-hit-est
+        "cd-hit-est -T {threads} {params.extra} -i {input} -o {output} 2> {log}"

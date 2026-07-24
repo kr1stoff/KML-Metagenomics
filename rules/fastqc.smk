@@ -33,12 +33,11 @@ rule multiqc:
 
 rule fastp:
     input:
-        sample=[
-            rules.create_symlinks.output.fq1,
-            rules.create_symlinks.output.fq2,
-        ],
+        rules.create_symlinks.output.fq1,
+        rules.create_symlinks.output.fq2,
     output:
-        trimmed=["qc/fastp/{sample}.1.fastq.gz", "qc/fastp/{sample}.2.fastq.gz"],
+        r1=temp("qc/fastp/{sample}.1.fastq.gz"), 
+        r2=temp("qc/fastp/{sample}.2.fastq.gz"),
         html="qc/fastp/{sample}.html",
         json="qc/fastp/{sample}.json",
     log:
@@ -52,8 +51,8 @@ rule fastp:
         extra=config["params"]["fastp"],
     shell:
         "fastp -w {threads} {params.extra} "
-        "-i {input.sample[0]} -I {input.sample[1]} "
-        "-o {output.trimmed[0]} -O {output.trimmed[1]} "
+        "-i {input[0]} -I {input[1]} "
+        "-o {output.r1} -O {output.r2} "
         "-h {output.html} -j {output.json} "
         "2> {log}"
 
