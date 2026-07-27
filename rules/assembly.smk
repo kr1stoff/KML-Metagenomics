@@ -22,7 +22,7 @@ rule megahit:
     params:
         extra=config["params"]["megahit"],
     shell:
-        "megahit {params.extra} -t {threads} -1 {input.r1} -2 {input.r2} -o {output.dir} 2> {log}"
+        "megahit {params.extra} -t {threads} -1 {input.r1} -2 {input.r2} -o {output.dir} --force 2> {log}"
 
 
 # 保留长度 > 500bp 的 contig

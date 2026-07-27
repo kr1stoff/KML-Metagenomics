@@ -45,8 +45,8 @@ software:
 params:
   fastp: "-g -q 5 -u 50 -n 15 -l 150 --overlap_diff_limit 1 --overlap_diff_percent_limit 10"
   bowtie2:
-    host_removal: "--end-to-end --sensitive --no-hd --no-sq -I 200 -X 400"
-    mapping: "--end-to-end --sensitive --no-hd --no-sq -I 200 -X 400"
+    host_removal: "--end-to-end --sensitive --no-head --no-sq -I 200 -X 400"
+    mapping: "--end-to-end --sensitive -I 200 -X 400"
   # megahit -m memory参数宏基因组推荐 64G 以上, 按照当前服务器的线程数, 内存数进行调整. 
   # 当前服务器为 32 线程, 256G 内存. -m 64000000000 -t 16 (64G内存 + 16线程)
   megahit: "--presets meta-large -m 64000000000"

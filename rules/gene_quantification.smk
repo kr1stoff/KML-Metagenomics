@@ -40,8 +40,19 @@ rule quant_bowtie2_map:
     threads: config["threads"]["high"]
     params:
         extra=config["params"]["bowtie2"]["mapping"],
+        rgid="{sample}",
+        rgsm="{sample}",
+        rgspl="Illumina",
     shell:
-        "bowtie2 -x gene_prediction/gene_catalogue {params.extra} --threads {threads} -1 {input.r1} -2 {input.r2} -S {output} 2> {log}"
+        "bowtie2 "
+        "-x gene_prediction/gene_catalogue "
+        "{params.extra} "
+        "--rg-id {params.rgid} -rg SM:{params.rgsm} -rg PL:{params.rgspl} "
+        "--threads {threads} "
+        "-1 {input.r1} "
+        "-2 {input.r2} "
+        "-S {output} "
+        "2> {log}"
 
 
 rule samtools_sort_index:
@@ -60,5 +71,5 @@ rule samtools_sort_index:
     shell:
         """
         samtools sort -o {output.bam} {input} 2> {log}
-        samtools index {output.bam}
+        samtools index {output.bam} 2> {log}
         """
