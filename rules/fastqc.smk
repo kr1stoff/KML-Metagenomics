@@ -36,8 +36,9 @@ rule fastp:
         rules.create_symlinks.output.fq1,
         rules.create_symlinks.output.fq2,
     output:
-        r1=temp("qc/fastp/{sample}.1.fastq.gz"), 
-        r2=temp("qc/fastp/{sample}.2.fastq.gz"),
+        # todo 删除中间文件
+        r1="qc/fastp/{sample}.1.fastq.gz",
+        r2="qc/fastp/{sample}.2.fastq.gz",
         html="qc/fastp/{sample}.html",
         json="qc/fastp/{sample}.json",
     log:

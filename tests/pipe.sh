@@ -25,6 +25,8 @@ mamba -n meta run cd-hit -T 16 -G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 5 -M 8000 -i SR
 mamba -n basic2 run bowtie2-build --threads 16 SRR23604269.cd-hit.fna SRR23604269.cd-hit
 mamba -n basic2 run bowtie2 -x SRR23604269.cd-hit --end-to-end --sensitive --no-hd --no-sq -I 200 -X 400 --threads 16 -1 SRR23604269_host_removed.1.fastq.gz -2 SRR23604269_host_removed.2.fastq.gz -S SRR23604269.cd-hit.bowtie2.sam
 samtools view -bS SRR23604269.cd-hit.bowtie2.sam | samtools sort -o SRR23604269.cd-hit.bowtie2.sorted.bam
+
 # 过滤掉reads数小于2的基因
+samtools idxstats gene_quantification/SRR23604271.gene_catalogue.sorted.bam | awk '$3>2' > test.reads_gt2.idxstats
 
 # 统计起始/终止密码子数量等信息

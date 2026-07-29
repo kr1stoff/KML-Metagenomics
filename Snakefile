@@ -19,7 +19,8 @@ samples = samples_df["sample"].tolist()
 
 rule all:
     input:
-        expand("{sample}.gene_catalogue.sorted.bam", sample=samples),
+        "gene_quantification/gene_abundance_table.tsv",
+        "gene_quantification/gene_reads_table.tsv",
         "qc/multiqc/multiqc_report.html",
         "upload/data_process_stats.xlsx",
 

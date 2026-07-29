@@ -26,7 +26,8 @@ rule format_fasta_head:
     input:
         rules.metagenemark.output.fna,
     output:
-        temp("gene_prediction/{sample}.format_head.fna"),
+        # todo 删除中间文件
+        "gene_prediction/{sample}.format_head.fna",
     benchmark:
         ".log/gene_prediction/{sample}.format_fasta_head.bm"
     log:
@@ -69,7 +70,7 @@ rule cd_hit:
     input:
         rules.merge_all_genes.output,
     output:
-        "gene_prediction/gene_catalogue.fna",
+        "gene_prediction/gene_catalogue.raw.fna",
     benchmark:
         ".log/gene_prediction/all_samples.cd-hit.bm"
     log:

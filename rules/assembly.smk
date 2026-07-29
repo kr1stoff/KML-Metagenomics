@@ -10,8 +10,8 @@ rule megahit:
     output:
         dir=directory("megahit/{sample}"),
         fa="megahit/{sample}/final.contigs.fa",
-        # 删掉中间文件
-        inter=temp(directory("megahit/{sample}/intermediate_contigs")),
+        # todo 删掉中间文件
+        inter=directory("megahit/{sample}/intermediate_contigs"),
     benchmark:
         ".log/assembly/megahit/{sample}.megahit.bm"
     log:

@@ -8,9 +8,10 @@ rule bowtie2_host_removal:
         r1=rules.fastp.output.r1,
         r2=rules.fastp.output.r2,
     output:
-        r1=temp("host_removal/{sample}_host_removed.1.fastq.gz"),
-        r2=temp("host_removal/{sample}_host_removed.2.fastq.gz"),
-        sam=temp("host_removal/{sample}.bowtie2.sam"),
+        # todo 删除中间文件
+        r1="host_removal/{sample}_host_removed.1.fastq.gz",
+        r2="host_removal/{sample}_host_removed.2.fastq.gz",
+        sam="host_removal/{sample}.bowtie2.sam",
     benchmark:
         ".log/host_removal/bowtie2/{sample}.bowtie2_host_removal.bm"
     log:
@@ -37,8 +38,9 @@ rule gunzip_host_removed:
         r1=rules.bowtie2_host_removal.output.r1,
         r2=rules.bowtie2_host_removal.output.r2,
     output:
-        r1=temp("host_removal/{sample}_host_removed.1.fastq"),
-        r2=temp("host_removal/{sample}_host_removed.2.fastq"),
+        # todo 删除中间文件
+        r1="host_removal/{sample}_host_removed.1.fastq",
+        r2="host_removal/{sample}_host_removed.2.fastq",
     benchmark:
         ".log/host_removal/gunzip/{sample}.gunzip.bm"
     log:
