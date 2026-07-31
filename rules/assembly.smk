@@ -56,4 +56,19 @@ rule quast:
         config["conda"]["quast"]
     shell:
         # 不需要多线程
-        "quast {input} -o quast/{wildcards.sample} 2> {log}"
+        "quast {input} -o assembly/quast/{wildcards.sample} 2> {log}"
+
+
+rule assembly_stats:
+    input:
+        expand("assembly/quast/{sample}/report.tsv", sample=samples),
+    output:
+        "upload/assembly_stats.xlsx",
+    benchmark:
+        ".log/assembly/stats.bm"
+    log:
+        ".log/assembly/stats.log",
+    conda:
+        config["conda"]["python"]
+    script:
+        "../scripts/assembly_stats.py"

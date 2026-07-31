@@ -18,7 +18,7 @@ rule bowtie2_host_removal:
         ".log/host_removal/bowtie2/{sample}.bowtie2_host_removal.log",
     conda:
         config["conda"]["bowtie2"]
-    threads: config["threads"]["high"]
+    threads: config["threads"]["medium"]
     params:
         extra=config["params"]["bowtie2"]["host_removal"],
         host_ref=config["database"]["host_reference"],

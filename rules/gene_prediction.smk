@@ -75,7 +75,7 @@ rule cd_hit:
         ".log/gene_prediction/all_samples.cd-hit.bm"
     log:
         ".log/gene_prediction/all_samples.cd-hit.log",
-    threads: config["threads"]["high"]
+    threads: config["threads"]["max"]
     conda:
         config["conda"]["cd_hit"]
     params:

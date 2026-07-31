@@ -19,7 +19,7 @@ rule quant_gene_cat_bowtie2_build:
         ".log/gene_quantification/bowtie2_build.log",
     conda:
         config["conda"]["bowtie2"]
-    threads: config["threads"]["high"]
+    threads: config["threads"]["max"]
     shell:
         "bowtie2-build --threads {threads} {input} gene_prediction/gene_catalogue.raw 2> {log}"
 
@@ -38,7 +38,7 @@ rule quant_bowtie2_map:
         ".log/gene_quantification/bowtie2_map/{sample}.bowtie2_map.log",
     conda:
         config["conda"]["bowtie2"]
-    threads: config["threads"]["high"]
+    threads: config["threads"]["medium"]
     params:
         extra=config["params"]["bowtie2"]["mapping"],
         rgid="{sample}",
@@ -68,7 +68,6 @@ rule samtools_sort_index:
         ".log/quantification/{sample}.samtools_sort.log",
     conda:
         config["conda"]["samtools"]
-    threads: config["threads"]["medium"]
     shell:
         """
         samtools sort -o {output.bam} {input} 2> {log}

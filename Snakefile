@@ -19,11 +19,11 @@ samples = samples_df["sample"].tolist()
 
 rule all:
     input:
-        # temp
-        expand("assembly/quast/{sample}/report.tsv", sample=samples),
         # 基因丰度
         "gene_quantification/gene_catalogue.unigene.fna",
         "gene_quantification/gene_reads_table.tsv",
+        # 组装
+        "upload/assembly_stats.xlsx",
         # 质控
         "qc/multiqc/multiqc_report.html",
         "upload/data_process_stats.xlsx",

@@ -33,6 +33,7 @@ threads:
   low: 4
   medium: 8
   high: 16
+  max: 32
 
 # 参考数据库
 database:

@@ -32,7 +32,7 @@ properties:
             - quantification
   conda:
     type: object
-    required: [python, fastqc, multiqc, fastp, bowtie2, megahit, seqtk]
+    required: [python, fastqc, multiqc, fastp, bowtie2, megahit, seqtk, cd_hit, samtools, quast]
     properties:
       python:
         type: string
@@ -55,9 +55,18 @@ properties:
       seqtk:
         type: string
         description: "seqtk conda 环境名"
+      cd_hit:
+        type: string
+        description: "cd-hit conda 环境名"
+      samtools:
+        type: string
+        description: "samtools conda 环境名"
+      quast:
+        type: string
+        description: "quast conda 环境名"
   threads:
     type: object
-    required: [low, medium, high]
+    required: [low, medium, high, max]
     properties:
       low:
         type: integer
@@ -71,6 +80,10 @@ properties:
         type: integer
         minimum: 1
         description: "高线程数"
+      max:
+        type: integer
+        minimum: 1
+        description: "最大线程数"
   database:
     type: object
     required: [host_reference, metagenemark_model]
