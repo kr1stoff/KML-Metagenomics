@@ -96,7 +96,7 @@ rule samtools_idxstats:
 # 样本-基因reads计数表, 第一列基因长度
 rule gene_reads_table:
     input:
-        expand("gene_quantification/{sample}.reads_gt2.idxstats", sample=samples)
+        expand("gene_quantification/{sample}.reads_gt2.idxstats", sample=samples),
     output:
         "gene_quantification/gene_reads_table.tsv",
     benchmark:
@@ -130,7 +130,7 @@ rule sample_gene_abundance:
 # 样本-基因丰度表
 rule gene_abundance_table:
     input:
-        expand("gene_quantification/{sample}.sample_gene_abundance.tsv", sample=samples)
+        expand("gene_quantification/{sample}.sample_gene_abundance.tsv", sample=samples),
     output:
         "gene_quantification/gene_abundance_table.tsv",
     benchmark:
@@ -141,3 +141,23 @@ rule gene_abundance_table:
         config["conda"]["python"]
     script:
         "../scripts/gene_abundance_table.py"
+
+
+rule gene_catalogue_unigene:
+    input:
+        abund=rules.gene_abundance_table.output,
+        fa=rules.cd_hit.output,
+    output:
+        glist="gene_quantification/gene_catalogue.unigene.list",
+        unigene="gene_quantification/gene_catalogue.unigene.fna",
+    benchmark:
+        ".log/gene_quantification/gene_catalogue_unigene.bm"
+    log:
+        ".log/gene_quantification/gene_catalogue_unigene.log",
+    conda:
+        config["conda"]["seqtk"]
+    shell:
+        """
+        sed '1d' {input.abund} | cut -f1 > {output.glist} 2> {log}
+        seqtk subseq {input.fa} {output.glist} > {output.unigene} 2>> {log}
+        """

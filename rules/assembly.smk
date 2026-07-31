@@ -8,14 +8,14 @@ rule megahit:
         r1=rules.gunzip_host_removed.output.r1,
         r2=rules.gunzip_host_removed.output.r2,
     output:
-        dir=directory("megahit/{sample}"),
-        fa="megahit/{sample}/final.contigs.fa",
+        dir=directory("assembly/megahit/{sample}"),
+        fa="assembly/megahit/{sample}/final.contigs.fa",
         # todo 删掉中间文件
-        inter=directory("megahit/{sample}/intermediate_contigs"),
+        inter=directory("assembly/megahit/{sample}/intermediate_contigs"),
     benchmark:
-        ".log/assembly/megahit/{sample}.megahit.bm"
+        ".log/assembly/{sample}.megahit.bm"
     log:
-        ".log/assembly/megahit/{sample}.megahit.log",
+        ".log/assembly/{sample}.megahit.log",
     conda:
         config["conda"]["megahit"]
     threads: config["threads"]["high"]
@@ -30,7 +30,7 @@ rule seqtk_filter_contigs:
     input:
         rules.megahit.output.fa,
     output:
-        "megahit/contigs_gt500/{sample}.fa",
+        "assembly/contigs_gt500/{sample}.fa",
     benchmark:
         ".log/assembly/seqtk/{sample}.seqtk_gt500.bm"
     log:
@@ -41,3 +41,19 @@ rule seqtk_filter_contigs:
         "-L 500",
     shell:
         "seqtk seq {params} {input} > {output} 2> {log}"
+
+
+rule quast:
+    input:
+        rules.seqtk_filter_contigs.output,
+    output:
+        "assembly/quast/{sample}/report.tsv",
+    benchmark:
+        ".log/assembly/{sample}.quast.bm"
+    log:
+        ".log/assembly/{sample}.quast.log",
+    conda:
+        config["conda"]["quast"]
+    shell:
+        # 不需要多线程
+        "quast {input} -o quast/{wildcards.sample} 2> {log}"

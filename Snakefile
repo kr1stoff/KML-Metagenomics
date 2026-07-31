@@ -19,8 +19,12 @@ samples = samples_df["sample"].tolist()
 
 rule all:
     input:
-        "gene_quantification/gene_abundance_table.tsv",
+        # temp
+        expand("assembly/quast/{sample}/report.tsv", sample=samples),
+        # 基因丰度
+        "gene_quantification/gene_catalogue.unigene.fna",
         "gene_quantification/gene_reads_table.tsv",
+        # 质控
         "qc/multiqc/multiqc_report.html",
         "upload/data_process_stats.xlsx",
 
