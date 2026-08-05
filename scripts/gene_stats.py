@@ -3,7 +3,15 @@
 
 import sys
 import pandas as pd
+import numpy as np
 from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+
+sys.stderr = open(snakemake.log[0], "w")
 
 # 标准细菌启动子密码子 (start codon) 和终止密码子 (stop codon)
 START_CODONS = {"ATG", "GTG", "TTG"}
@@ -43,7 +51,7 @@ def has_stop(seq):
 
 
 def main():
-    fna_path = sys.argv[1] if len(sys.argv) > 1 else "gene_catalogue.unigene.fna.demo"
+    fna_path = snakemake.input[0]
     seqs = parse_fna(fna_path)
 
     total_len = 0
@@ -52,10 +60,12 @@ def main():
     count_stop_only = 0
     count_none = 0
     count_all = 0
+    lengths = []
 
     for _, seq in seqs:
         total_len += len(seq)
         gc_count += seq.count("G") + seq.count("C")
+        lengths.append(len(seq))
 
         s = has_start(seq)
         e = has_stop(seq)
@@ -92,20 +102,69 @@ def main():
         "GC_Percent": [round(gc_percent, 2)],
     }
     df_out = pd.DataFrame(data)
-    xlsx_path = Path(fna_path).with_suffix(".stats.xlsx")
+    xlsx_path = snakemake.output.xlsx
     df_out.to_excel(xlsx_path, index=False)
-    print(f"\nExcel 已保存至: {xlsx_path}")
+    sys.stderr.write(f"\nExcel 已保存至: {xlsx_path}")
 
-    print(f"{'指标':<30} {'数值':>25}")
-    print("-" * 57)
-    print(f"{'ORFs_NO.':<30} {n:>25,}")
-    print(f"{'Integrity_start':<30} {count_start_only:>15,} ({pct_start:.2f}%)")
-    print(f"{'Integrity_end':<30}   {count_stop_only:>15,} ({pct_end:.2f}%)")
-    print(f"{'Integrity_none':<30}  {count_none:>15,} ({pct_none:.2f}%)")
-    print(f"{'Integrity_all':<30}   {count_all:>15,} ({pct_all:.2f}%)")
-    print(f"{'Total_Len.(Mbp)':<30} {total_len / 1e6:>15.4f}")
-    print(f"{'Average_Len.(bp)':<30} {avg_len:>15.2f}")
-    print(f"{'GC_Percent':<30}       {gc_percent:>15.2f}%")
+    sys.stderr.write(f"{'指标':<30} {'数值':>25}")
+    sys.stderr.write("-" * 57)
+    sys.stderr.write(f"{'ORFs_NO.':<30} {n:>25,}")
+    sys.stderr.write(f"{'Integrity_start':<30} {count_start_only:>15,} ({pct_start:.2f}%)")
+    sys.stderr.write(f"{'Integrity_end':<30}   {count_stop_only:>15,} ({pct_end:.2f}%)")
+    sys.stderr.write(f"{'Integrity_none':<30}  {count_none:>15,} ({pct_none:.2f}%)")
+    sys.stderr.write(f"{'Integrity_all':<30}   {count_all:>15,} ({pct_all:.2f}%)")
+    sys.stderr.write(f"{'Total_Len.(Mbp)':<30} {total_len / 1e6:>15.4f}")
+    sys.stderr.write(f"{'Average_Len.(bp)':<30} {avg_len:>15.2f}")
+    sys.stderr.write(f"{'GC_Percent':<30}       {gc_percent:>15.2f}%")
+
+    # ============================================================
+    # 基因长度分布图
+    # ============================================================
+    # x 轴上限定为 75 分位长度，超出部分归入最后一个 bin
+    # cap = np.percentile(lengths, 75)
+    # 直接设置 3000 吧
+    cap = 3000
+    clipped = np.clip(lengths, None, cap)
+
+    n_bins = 50
+    counts, bin_edges = np.histogram(clipped, bins=n_bins)
+    bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+    bin_width = bin_edges[1] - bin_edges[0]
+    pct = counts / counts.sum() * 100
+
+    fig, ax1 = plt.subplots(figsize=(12, 6))
+
+    # 主 y 轴: 条形图 (序列数目)
+    ax1.bar(bin_centers, counts, width=bin_width * 0.9,
+            color="steelblue", alpha=0.75, edgecolor="white")
+    ax1.set_xlabel("Gene Length (bp)", fontsize=12)
+    ax1.set_ylabel("Sequence Count", fontsize=12, color="steelblue")
+    ax1.tick_params(axis="y", labelcolor="steelblue")
+
+    # x 轴刻度: 取 11 个均匀刻度，最后一个标签标注为 "≥{cap}"
+    x_ticks = np.linspace(0, cap, 11)
+    x_labels = [f"{int(v):,}" for v in x_ticks]
+    x_labels[-1] = f"≥ {int(cap):,}"
+    ax1.set_xticks(x_ticks)
+    ax1.set_xticklabels(x_labels, rotation=45, ha="right", fontsize=9)
+    ax1.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f"{int(x):,}"))
+
+    # 副 y 轴: 折线图 (百分比)
+    ax2 = ax1.twinx()
+    ax2.plot(bin_centers, pct, color="red", marker="o", linewidth=1.5,
+             markersize=3)
+    ax2.set_ylabel("Percentage (%)", fontsize=12, color="red")
+    ax2.tick_params(axis="y", labelcolor="red")
+
+    # 主标题
+    ax1.set_title(f"Gene Length Distribution — {sample_name}", fontsize=14,
+                  fontweight="bold")
+
+    fig.tight_layout()
+    chart_path = snakemake.output.png
+    fig.savefig(chart_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    sys.stderr.write(f"长度分布图已保存至: {chart_path}")
 
 
 if __name__ == "__main__":

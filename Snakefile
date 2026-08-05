@@ -20,7 +20,7 @@ samples = samples_df["sample"].tolist()
 rule all:
     input:
         # 基因丰度
-        "gene_quantification/gene_catalogue.unigene.fna",
+        "upload/gene_catalogue_stats.xlsx",
         "gene_quantification/gene_reads_table.tsv",
         # 组装
         "upload/assembly_stats.xlsx",
@@ -35,3 +35,4 @@ include: "rules/host_removal.smk"
 include: "rules/assembly.smk"
 include: "rules/gene_prediction.smk"
 include: "rules/gene_quantification.smk"
+include: "rules/gene_statistics.smk"
