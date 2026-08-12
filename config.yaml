@@ -26,7 +26,7 @@ conda:
   seqtk: basic
   cd_hit: meta
   samtools: basic
-  quast: qpcr
+  quast: meta
 
 # 线程分级
 threads:

@@ -1,3 +1,39 @@
+nr 数据库提取 细菌病毒真菌古菌 形成 nr_miro 数据库，再建 diamond 数据库
+```bash
+# 获取四个类群下所有子taxid(包括各级子分类)
+# Bacteria=2, Archaea=2157, Fungi=4751, Viruses=10239
+mamba -n basic run taxonkit --data-dir /data/mengxf/Database/NCBI/taxonomy list --ids 2 > bacteria_taxids.txt
+mamba -n basic run taxonkit --data-dir /data/mengxf/Database/NCBI/taxonomy list --ids 2157 > archaea_taxids.txt
+mamba -n basic run taxonkit --data-dir /data/mengxf/Database/NCBI/taxonomy list --ids 4751 > fungi_taxids.txt
+mamba -n basic run taxonkit --data-dir /data/mengxf/Database/NCBI/taxonomy list --ids 10239 > viruses_taxids.txt
+
+# 用blastdbcmd按taxid列表抽取序列
+mamba -n basic run blastdbcmd -db /data/mengxf/Database/NCBI/blast/db/nr/nr -taxidlist bacteria_taxids.txt -out bacteria.fasta
+tsp mamba -n basic run blastdbcmd -db /data/mengxf/Database/NCBI/blast/db/nr/nr -taxidlist archaea_taxids.txt -out archaea.fasta
+tsp mamba -n basic run blastdbcmd -db /data/mengxf/Database/NCBI/blast/db/nr/nr -taxidlist fungi_taxids.txt -out fungi.fasta
+tsp mamba -n basic run blastdbcmd -db /data/mengxf/Database/NCBI/blast/db/nr/nr -taxidlist viruses_taxids.txt -out viruses.fasta
+
+# 合并数据库
+cat bacteria.fasta archaea.fasta fungi.fasta viruses.fasta > nr_micro.fasta
+
+# 建 diamond 库，diamond 最好用最新版，建议2.1.6及以上，低版本 nodes.dmp 会报错
+mamba -n diamond run diamond makedb \
+  --threads 32 \
+  --in nr_micro.fasta \
+  -d nr_micro \
+  --taxonmap /data/mengxf/Database/NCBI/pub/taxonomy/accession2taxid/prot.accession2taxid.gz \
+  --taxonnodes /data/mengxf/Database/NCBI/taxonomy/nodes.dmp \
+  --taxonnames /data/mengxf/Database/NCBI/taxonomy/names.dmp
+
+# 测试 diamond 数据库
+mamba -n diamond run diamond blastx \
+  --query test.fna \
+  --db /data/mengxf/Database/DIAMOND/nr_micro/nr_micro.dmnd \
+  --outfmt 6 qseqid sseqid sscinames staxids pident qcovhsp length \
+  --out results.out \
+  --threads 32
+```
+
 # ✴️Claude 202607313 - 建库方法
 提取思路取决于你的 NR 数据库是 **BLAST格式数据库**还是**纯fasta文件**,两种方式如下:
 

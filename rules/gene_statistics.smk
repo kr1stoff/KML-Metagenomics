@@ -16,3 +16,16 @@ rule gene_stats:
 
 
 # Core-pan 分析
+rule core_pan_stats:
+    input:
+        rules.gene_abundance_table.output,
+    output:
+        "upload/core_pan_stats.png",
+    benchmark:
+        ".log/gene_statistics/core_pan_stats.bm"
+    log:
+        ".log/gene_statistics/core_pan_stats.log",
+    conda:
+        config["conda"]["python"]
+    script:
+        "../scripts/core_pan_stats.py"
