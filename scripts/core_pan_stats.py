@@ -5,9 +5,9 @@ Core-Pan 基因累积曲线分析
 绘制核心基因和泛基因的累积曲线。
 
 用法（Snakemake rule）：
-    rule core_pan_gene_analysis:
+    rule core_pan_stats:
         input:  "gene_presence_absence.tsv"
-        output: "core_pan_curve.pdf"
+        output: "core_pan_curve.png"
         log:    "core_pan_gene_analysis.log"
         script: "scripts/core_pan_gene_analysis.py"
 

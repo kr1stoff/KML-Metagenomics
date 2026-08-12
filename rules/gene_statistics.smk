@@ -15,7 +15,6 @@ rule gene_stats:
         "../scripts/gene_stats.py"
 
 
-# Core-pan 分析
 rule core_pan_stats:
     input:
         rules.gene_abundance_table.output,
@@ -29,3 +28,22 @@ rule core_pan_stats:
         config["conda"]["python"]
     script:
         "../scripts/core_pan_stats.py"
+
+
+rule gene_abundance_heatmap:
+    input:
+        rules.gene_abundance_table.output,
+    output:
+        png="upload/gene_abundance_heatmap.png",
+        csv="upload/gene_abundance_heatmap.csv",
+    benchmark:
+        ".log/gene_statistics/gene_abundance_heatmap.bm"
+    log:
+        ".log/gene_statistics/gene_abundance_heatmap.log",
+    conda:
+        config["conda"]["python"]
+    params:
+        # 支持 "spearman", "pearson" 两种算法
+        method="spearman"
+    script:
+        "../scripts/gene_abundance_heatmap.py"

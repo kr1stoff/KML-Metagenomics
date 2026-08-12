@@ -12,9 +12,9 @@ output = snakemake.output[0]
 dfs = []
 
 for report in reports:
-    # Total length, # contigs (>= 0 bp), N50, N90, Largest contig
+    # Total length, # contigs (>= 0 bp), N50, N75, Largest contig
     df = pd.read_csv(report, sep='\t', index_col=0)
-    indices = ['Total length', '# contigs (>= 0 bp)', 'N50', 'N90', 'Largest contig']
+    indices = ['Total length', '# contigs (>= 0 bp)', 'N50', 'N75', 'Largest contig']
     df = df.loc[indices]
     # quast 不计算平均长度
     df.loc['Average len'] = df.loc['Total length'] / df.loc['# contigs (>= 0 bp)']

@@ -22,6 +22,8 @@ rule all:
         # 基因丰度
         "upload/gene_catalogue_stats.xlsx",
         "gene_quantification/gene_reads_table.tsv",
+        "upload/core_pan_stats.png",
+        "upload/gene_abundance_heatmap.png",
         # 组装
         "upload/assembly_stats.xlsx",
         # 质控
