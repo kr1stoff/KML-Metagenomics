@@ -1,7 +1,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 type: object
 required:
-  - samples_tsv
+  - samples
   - workflow
   - conda
   - threads
@@ -9,7 +9,7 @@ required:
   - software
   - params
 properties:
-  samples_tsv:
+  samples:
     type: string
     description: "样本输入表路径 (TSV 三列: 样本ID, R1路径, R2路径, 无表头)"
   workflow:

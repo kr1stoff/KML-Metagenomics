@@ -25,7 +25,7 @@ out_csv = snakemake.output['csv']
 # 支持 "spearman", "pearson" 两种算法
 method = snakemake.params['method']
 
-# main
+# MAIN
 # 1. 读取基因丰度表: 行=基因, 列=样本
 df = pd.read_csv(in_path, sep="\t", index_col=0)
 df = df.apply(pd.to_numeric, errors="coerce").fillna(0.0)

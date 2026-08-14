@@ -1,7 +1,9 @@
 # KML-Metagenomics 宏基因组分析流程配置文件
 
 # 样本输入表: 三列 (样本ID, R1路径, R2路径), TSV格式, 无表头
-samples_tsv: "input.tsv"
+# samples: "input.tsv"
+# 元数据表：分组信息等
+# metadata: "metadata.tsv"
 
 # 流程步骤开关
 workflow:

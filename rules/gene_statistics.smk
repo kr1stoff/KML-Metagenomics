@@ -32,7 +32,7 @@ rule core_pan_stats:
 
 rule gene_abundance_heatmap:
     input:
-        rules.gene_abundance_table.output,
+        rules.gene_abundance_table.output[0],
     output:
         png="upload/gene_abundance_heatmap.png",
         csv="upload/gene_abundance_heatmap.csv",
@@ -47,3 +47,20 @@ rule gene_abundance_heatmap:
         method="spearman"
     script:
         "../scripts/gene_abundance_heatmap.py"
+
+
+rule gene_count_boxplot:
+    input:
+        abund=rules.gene_abundance_table.output[0],
+        meta=config["metadata"]
+    output:
+        png="upload/groups_gene_count_boxplot.png",
+        csv="upload/groups_gene_count_boxplot.csv",
+    benchmark:
+        ".log/gene_statistics/gene_count_boxplot.bm"
+    log:
+        ".log/gene_statistics/gene_count_boxplot.log",
+    conda:
+        config["conda"]["python"]
+    script:
+        "../scripts/gene_count_boxplot.py"

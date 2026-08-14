@@ -27,8 +27,10 @@ rule multiqc:
         ".log/qc/multiqc/multiqc.log",
     conda:
         config["conda"]["multiqc"]
+    params:
+        extra="--force"
     shell:
-        "multiqc {input} --outdir qc/multiqc 2> {log}"
+        "multiqc {params.extra} {input} --outdir qc/multiqc 2> {log}"
 
 
 rule fastp:

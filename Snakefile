@@ -12,7 +12,7 @@ configfile: workflow.source_path("config.yaml")
 config_schema: workflow.source_path("config.schema.yaml")
 
 # 读取样本表
-samples_df = pd.read_csv(config["samples_tsv"], sep="\t", header=None, dtype=str)
+samples_df = pd.read_csv(config["samples"], sep="\t", header=None, dtype=str)
 samples_df.columns = ["sample", "fq1", "fq2"]
 samples = samples_df["sample"].tolist()
 
@@ -24,6 +24,7 @@ rule all:
         "gene_quantification/gene_reads_table.tsv",
         "upload/core_pan_stats.png",
         "upload/gene_abundance_heatmap.png",
+        "upload/groups_gene_count_boxplot.png",
         # 组装
         "upload/assembly_stats.xlsx",
         # 质控

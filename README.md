@@ -24,7 +24,10 @@
 4. 正式运行：
 
    ```bash
-   snakemake --cores 32 --use-conda --rerun-incomplete --scheduler greedy --config samples_tsv=$PWD/tests/input.tsv --directory /data/mengxf/Develop/KML260617-MetaGenomics/results/260714
+   snakemake --cores 32 --use-conda --rerun-incomplete --scheduler greedy \
+      --config samples=$PWD/tests/input.tsv \
+      metadata=$PWD/tests/metadata.tsv \
+      --directory /data/mengxf/Develop/KML260617-MetaGenomics/results/260714
    ```
 
 ## 注意事项

@@ -84,7 +84,7 @@ KML-Metagenomics/
 4. 正式运行：
 
    ```bash
-   snakemake --cores 32 --use-conda --rerun-incomplete --scheduler greedy --config samples_tsv=$PWD/tests/input.tsv --directory /data/mengxf/Develop/KML260617-MetaGenomics/results/260714
+   snakemake --cores 32 --use-conda --rerun-incomplete --scheduler greedy --config samples=$PWD/tests/input.tsv --directory /data/mengxf/Develop/KML260617-MetaGenomics/results/260714
    ```
 
    集群提交可追加 `--cluster` / `--profile` 等参数。
@@ -93,7 +93,7 @@ KML-Metagenomics/
 
 | 分组 | 字段 | 说明 |
 |------|------|------|
-| samples_tsv | — | 样本输入表路径 |
+| samples | — | 样本输入表路径 |
 | workflow | steps | 启用步骤列表 |
 | conda | qc / basic2 / meta | 各工具 conda 环境名 |
 | threads | low / medium / high | 线程分级 |
