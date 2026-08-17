@@ -64,3 +64,20 @@ rule gene_count_boxplot:
         config["conda"]["python"]
     script:
         "../scripts/gene_count_boxplot.py"
+
+
+rule gene_venn:
+    input:
+        abund=rules.gene_abundance_table.output[0],
+        meta=config["metadata"]
+    output:
+        png="upload/groups_gene_venn.png",
+        csv="upload/groups_gene_venn.csv",
+    benchmark:
+        ".log/gene_statistics/gene_venn.bm"
+    log:
+        ".log/gene_statistics/gene_venn.log",
+    conda:
+        config["conda"]["python"]
+    script:
+        "../scripts/gene_venn.py"

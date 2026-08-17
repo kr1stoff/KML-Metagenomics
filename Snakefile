@@ -25,6 +25,7 @@ rule all:
         "upload/core_pan_stats.png",
         "upload/gene_abundance_heatmap.png",
         "upload/groups_gene_count_boxplot.png",
+        "upload/groups_gene_venn.png",
         # 组装
         "upload/assembly_stats.xlsx",
         # 质控
