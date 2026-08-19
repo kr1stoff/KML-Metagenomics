@@ -32,7 +32,7 @@ properties:
             - quantification
   conda:
     type: object
-    required: [python, fastqc, multiqc, fastp, bowtie2, megahit, seqtk, cd_hit, samtools, quast]
+    required: [python, fastqc, multiqc, fastp, bowtie2, megahit, seqtk, cd_hit, samtools, quast, diamond]
     properties:
       python:
         type: string
@@ -64,6 +64,9 @@ properties:
       quast:
         type: string
         description: "quast conda 环境名"
+      diamond:
+        type: string
+        description: "diamond conda 环境名"
   threads:
     type: object
     required: [low, medium, high, max]
@@ -86,7 +89,7 @@ properties:
         description: "最大线程数"
   database:
     type: object
-    required: [host_reference, metagenemark_model]
+    required: [host_reference, metagenemark_model, nr_micro]
     properties:
       host_reference:
         type: string
@@ -94,6 +97,9 @@ properties:
       metagenemark_model:
         type: string
         description: "MetaGeneMark 模型文件路径"
+      nr_micro:
+        type: string
+        description: "DIAMOND NR 微生物数据库路径"
   software:
     type: object
     required: [gmhmmp]
@@ -103,7 +109,7 @@ properties:
         description: "MetaGeneMark gmhmmp 可执行文件路径"
   params:
     type: object
-    required: [fastp, bowtie2, megahit, cd_hit, gmhmmp]
+    required: [fastp, bowtie2, megahit, cd_hit, gmhmmp, diamond]
     properties:
       fastp:
         type: string
@@ -127,3 +133,6 @@ properties:
       gmhmmp:
         type: string
         description: "MetaGeneMark gmhmmp 运行参数"
+      diamond:
+        type: string
+        description: "diamond 比对参数"

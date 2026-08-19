@@ -28,7 +28,7 @@ rule multiqc:
     conda:
         config["conda"]["multiqc"]
     params:
-        extra="--force"
+        extra="--force",
     shell:
         "multiqc {params.extra} {input} --outdir qc/multiqc 2> {log}"
 

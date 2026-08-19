@@ -44,7 +44,7 @@ rule gene_abundance_heatmap:
         config["conda"]["python"]
     params:
         # 支持 "spearman", "pearson" 两种算法
-        method="spearman"
+        method="spearman",
     script:
         "../scripts/gene_abundance_heatmap.py"
 
@@ -52,7 +52,7 @@ rule gene_abundance_heatmap:
 rule gene_count_boxplot:
     input:
         abund=rules.gene_abundance_table.output[0],
-        meta=config["metadata"]
+        meta=config["metadata"],
     output:
         png="upload/groups_gene_count_boxplot.png",
         csv="upload/groups_gene_count_boxplot.csv",
@@ -69,7 +69,7 @@ rule gene_count_boxplot:
 rule gene_venn:
     input:
         abund=rules.gene_abundance_table.output[0],
-        meta=config["metadata"]
+        meta=config["metadata"],
     output:
         png="upload/groups_gene_venn.png",
         csv="upload/groups_gene_venn.csv",

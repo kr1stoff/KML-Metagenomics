@@ -61,4 +61,4 @@ params:
   cd_hit: "-G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 8 -M 64000"
   gmhmmp: "-a -d -f G -p 1"
   # 下面参数为 CLAUDE 优化. --block-size: 内存占用 ≈ b × 6GB, 当前为 180GB
-  diamond: "--block-size 30 --index-chunks 1 --evalue 1e-5 --top 10 --query-cover 50"
+  diamond: "--block-size 30 --index-chunks 1 --evalue 1e-5 --top 10"

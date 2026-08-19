@@ -20,10 +20,10 @@ samples = samples_df["sample"].tolist()
 rule all:
     input:
         # 分类
-        "taxon_classification/diamond_nr_miro.tsv",
+        "taxon_classification/diamond_nr_miro.daa",
         # 基因丰度
-        "upload/gene_catalogue_stats.xlsx",
         "gene_quantification/gene_reads_table.tsv",
+        "upload/gene_catalogue_stats.xlsx",
         "upload/core_pan_stats.png",
         "upload/gene_abundance_heatmap.png",
         "upload/groups_gene_count_boxplot.png",
