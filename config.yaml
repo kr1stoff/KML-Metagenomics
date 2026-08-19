@@ -29,6 +29,7 @@ conda:
   cd_hit: meta
   samtools: basic
   quast: meta
+  diamond: diamond
 
 # 线程分级
 threads:
@@ -41,6 +42,7 @@ threads:
 database:
   host_reference: "/data/mengxf/Database/reference/hg19/hg19.fa"
   metagenemark_model: "/data/mengxf/Software/MetaGeneMark_linux_64/mgm/MetaGeneMark_v1.mod"
+  nr_micro: "/data/mengxf/Database/DIAMOND/nr_micro/nr_micro.dmnd"
 
 # 第三方软件路径
 software:
@@ -51,10 +53,12 @@ params:
   bowtie2:
     host_removal: "--end-to-end --sensitive --no-head --no-sq -I 200 -X 400"
     mapping: "--end-to-end --sensitive -I 200 -X 400"
-  # megahit -m memory参数宏基因组推荐 64G 以上, 按照当前服务器的线程数, 内存数进行调整. 
+  # megahit -m memory参数宏基因组推荐 64G 以上
   # 当前服务器为 32 线程, 256G 内存. -m 64000000000 -t 16 (64G内存 + 16线程)
   megahit: "--presets meta-large -m 64000000000"
   # cd-hit 内存 64G
-  # Claude: -n 参数 word length 5 -> 8, 5 速度太慢了
+  # 下面参数为 CLAUDE 优化. -n 参数 word length 5 -> 8, 5 速度太慢了
   cd_hit: "-G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 8 -M 64000"
   gmhmmp: "-a -d -f G -p 1"
+  # 下面参数为 CLAUDE 优化. --block-size: 内存占用 ≈ b × 6GB, 当前为 180GB
+  diamond: "--block-size 30 --index-chunks 1 --evalue 1e-5 --top 10 --query-cover 50"

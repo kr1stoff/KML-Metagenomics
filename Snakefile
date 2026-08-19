@@ -19,6 +19,8 @@ samples = samples_df["sample"].tolist()
 
 rule all:
     input:
+        # 分类
+        "taxon_classification/diamond_nr_miro.tsv",
         # 基因丰度
         "upload/gene_catalogue_stats.xlsx",
         "gene_quantification/gene_reads_table.tsv",
@@ -40,3 +42,4 @@ include: "rules/assembly.smk"
 include: "rules/gene_prediction.smk"
 include: "rules/gene_quantification.smk"
 include: "rules/gene_statistics.smk"
+include: "rules/taxon_classification.smk"
