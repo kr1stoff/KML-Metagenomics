@@ -1,4 +1,3 @@
-# QC
 rule fastqc:
     input:
         rules.create_symlinks.output.fq1,

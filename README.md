@@ -37,17 +37,50 @@
 - 去宿主的 SAM 文件仅作中间产物，已设为 `temp()`，不影响后续分析。
 
 ## 开发
-- 20260806 diamond nr_lite 构建
+- 🔄20260824 - eggNOG  
+   在 `meta` 环境
+- 🔄20260824 - krona
+   - 准备 krona 输入, 顺便输出样本注释后物种, 层级, 丰富度信息表. `/data/mengxf/Develop/KML260617-MetaGenomics/work/260819-classification/make_krona_input.py`
+   - 运行多样本 krona
+   ```bash
+   mamba -n meta run ktImportText SRR23604277.krona_input.txt SRR23604277.krona_input.txt2
+   ```
+   
+- 20260821 - diamond(daa) + megan6
+   ```bash
+   # daa-meganizer 就地修改, 直接修改输入文件
+   mamba -n basic2 run daa-meganizer -i test.daa -mdb /data/mengxf/Database/MEGAN6/megan-map-Feb2022.db --longReads --threads 32
+   # 会在输入的原.daa文件上修改
+   # -i 是diamond比对后输出的结果文件
+   # -mdb 是适应megan的映射文件
+   # --longReads对较长的contigs/gene开启该模式
+
+   # 提取NCBI分类信息
+   mamba -n basic2 run daa2info -i test.daa -o test_out -l -m -r2c Taxonomy -p true -r true
+   # -o输出的文件中即每条序列的物种注释信息
+
+   # 若要提取物种注释和功能注释信息
+   daa2info -i contigs.daa -o out -l -m -r2c Taxonomy GTDB KEGG EC EGGNOG INTERPRO2GO SEED
+   ```
+
+   加运行完成标记, 就不用复制了. 如果不行可以用复制的方式
+   ```snakemake
+   rule meganize_daa:
+      input:
+         daa = "results/{sample}.daa",
+         a2t = "db/prot_acc2tax.bin"
+      output:
+         flag = "results/{sample}.daa.meganized"  # 标记文件
+      shell:
+         """
+         daa-meganizer -i {input.daa} -a2t {input.a2t}
+         touch {output.flag}
+         """
+   ```
+
+- ✅20260806 diamond nr_lite 构建
    - 在 `/data/mengxf/Database/NCBI/blast/db/nr` 目录， 等待测试完成后，按照细菌、古菌、真菌、病毒进行拆分.
    - `docs\make_diamond_nr_database.md` 记录了构建diamond小nr数据库的思路和方法.
    - `diamond` 在 `rnaseq` conda 环境，taxonkit 在 `basic`
-    ```bash
-   /home/mengxf/miniforge3/envs/basic/bin/blastx \
-      -query test.fna \
-      -db /data/mengxf/Database/NCBI/blast/db/nr/nr \
-      -out result_blastn.tsv \
-      -outfmt "6 qseqid sseqid ssciname staxid pident qcovs length" \
-      -evalue 1e-5 \
-      -num_threads 32
-   ```
-- 20260806 core-pan 分析在 `scripts\core_pan_gene_analysis.py` 待整合
+
+- ✅20260806 core-pan 分析在 `scripts\core_pan_gene_analysis.py` 待整合

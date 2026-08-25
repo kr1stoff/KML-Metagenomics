@@ -75,8 +75,8 @@ rule samtools_sort_index:
         """
 
 
-# 统计各样本中各基因的reads数量, 过滤掉样本中 "reads≤2" 的基因
 rule samtools_idxstats:
+    message: "samtools idxstats 统计各样本中各基因的reads数量, 过滤掉样本中 reads≤2 的基因",
     input:
         bam=rules.samtools_sort_index.output.bam,
         bai=rules.samtools_sort_index.output.bai,
@@ -92,8 +92,8 @@ rule samtools_idxstats:
         "samtools idxstats {input.bam} | awk '$3>2' > {output} 2> {log}"
 
 
-# 样本-基因reads计数表, 第一列基因长度
 rule gene_reads_table:
+    message: "样本-基因reads计数表, 第一列基因长度",
     input:
         expand("gene_quantification/{sample}.reads_gt2.idxstats", sample=samples),
     output:
@@ -108,9 +108,10 @@ rule gene_reads_table:
         "../scripts/gene_reads_table.py"
 
 
-# 基因丰度, 就是 RPKM. 算法参考 docs/gene_abundance.md.
-# 样本内, 基因丰度 = (基因reads/基因长度) / sum(所有基因reads数量) * 10**9
 rule sample_gene_abundance:
+    message: 
+        "基因丰度, 就是 RPKM. 算法参考 docs/gene_abundance.md."
+        "样本内, 基因丰度 = (基因reads/基因长度) / sum(所有基因reads数量) * 10**9",
     input:
         rules.samtools_idxstats.output,
     output:
@@ -126,8 +127,8 @@ rule sample_gene_abundance:
         "../scripts/sample_gene_abundance.py"
 
 
-# 样本-基因丰度表
 rule gene_abundance_table:
+    message: "样本-基因丰度表",
     input:
         expand("gene_quantification/{sample}.sample_gene_abundance.tsv", sample=samples),
     output:

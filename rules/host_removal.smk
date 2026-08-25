@@ -32,8 +32,8 @@ rule bowtie2_host_removal:
         "2> {log}"
 
 
-# 解压去宿主后的 fastq, 供 megahit 组装使用, 真实样本不需要这一步
 rule gunzip_host_removed:
+    message: "解压去宿主后的 fastq, 供 megahit 组装使用, 真实样本不需要这一步",
     input:
         r1=rules.bowtie2_host_removal.output.r1,
         r2=rules.bowtie2_host_removal.output.r2,

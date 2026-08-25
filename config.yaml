@@ -30,6 +30,9 @@ conda:
   samtools: basic
   quast: meta
   diamond: diamond
+  # megan6: meta
+  megan6: basic2
+  krona: meta
 
 # 线程分级
 threads:
@@ -43,6 +46,7 @@ database:
   host_reference: "/data/mengxf/Database/reference/hg19/hg19.fa"
   metagenemark_model: "/data/mengxf/Software/MetaGeneMark_linux_64/mgm/MetaGeneMark_v1.mod"
   nr_micro: "/data/mengxf/Database/DIAMOND/nr_micro/nr_micro.dmnd"
+  megan_map: "/data/mengxf/Database/MEGAN6/megan-map-Feb2022.db"
 
 # 第三方软件路径
 software:
@@ -60,5 +64,7 @@ params:
   # 下面参数为 CLAUDE 优化. -n 参数 word length 5 -> 8, 5 速度太慢了
   cd_hit: "-G 0 -aS 0.9 -g 1 -d 0 -c 0.95 -n 8 -M 64000"
   gmhmmp: "-a -d -f G -p 1"
-  # 下面参数为 CLAUDE 优化. --block-size: 内存占用 ≈ b × 6GB, 当前为 180GB
-  diamond: "--block-size 30 --index-chunks 1 --evalue 1e-5 --top 10"
+  # 下面参数为 CLAUDE 优化. 
+  # --block-size: 内存占用 ≈ b × 6GB
+  # --index-chunks 越小内存开销越大, 还有 .dmnd 索引也都读入内存, block-size 不能顶格设置
+  diamond: "--block-size 16 --index-chunks 1 --evalue 1e-5 --top 10"

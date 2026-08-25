@@ -25,8 +25,8 @@ rule megahit:
         "megahit {params.extra} -t {threads} -1 {input.r1} -2 {input.r2} -o {output.dir} --force 2> {log}"
 
 
-# 保留长度 > 500bp 的 contig
 rule seqtk_filter_contigs:
+    message: "seqtk seq 保留长度 > 500bp 的 contig",
     input:
         rules.megahit.output.fa,
     output:
@@ -55,7 +55,6 @@ rule quast:
     conda:
         config["conda"]["quast"]
     shell:
-        # 不需要多线程
         "quast {input} -o assembly/quast/{wildcards.sample} 2> {log}"
 
 

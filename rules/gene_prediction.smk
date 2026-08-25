@@ -36,8 +36,8 @@ rule format_fasta_head:
         "sed 's/|.*/_'{wildcards.sample}'/g' {input} > {output} 2> {log}"
 
 
-# 保留长度 > 100bp 的基因序列
 rule seqtk_filter_genes:
+    message: "seqtk seq 保留长度 > 100bp 的基因序列",
     input:
         rules.format_fasta_head.output,
     output:
@@ -52,8 +52,8 @@ rule seqtk_filter_genes:
         "seqtk seq -L 100 {input} > {output} 2> {log}"
 
 
-# 合并所有样本的基因序列
 rule merge_all_genes:
+    message: "合并所有样本的基因序列",
     input:
         expand("gene_prediction/{sample}.gm.gt100bp.fna", sample=samples),
     output:
