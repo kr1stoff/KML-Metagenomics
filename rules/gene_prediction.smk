@@ -37,7 +37,8 @@ rule format_fasta_head:
 
 
 rule seqtk_filter_genes:
-    message: "seqtk seq 保留长度 > 100bp 的基因序列",
+    message:
+        "seqtk seq 保留长度 > 100bp 的基因序列"
     input:
         rules.format_fasta_head.output,
     output:
@@ -53,7 +54,8 @@ rule seqtk_filter_genes:
 
 
 rule merge_all_genes:
-    message: "合并所有样本的基因序列",
+    message:
+        "合并所有样本的基因序列"
     input:
         expand("gene_prediction/{sample}.gm.gt100bp.fna", sample=samples),
     output:

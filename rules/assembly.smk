@@ -26,7 +26,8 @@ rule megahit:
 
 
 rule seqtk_filter_contigs:
-    message: "seqtk seq 保留长度 > 500bp 的 contig",
+    message:
+        "seqtk seq 保留长度 > 500bp 的 contig"
     input:
         rules.megahit.output.fa,
     output:

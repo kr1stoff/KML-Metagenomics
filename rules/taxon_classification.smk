@@ -29,11 +29,12 @@ rule diamond_nr_miro:
 
 
 rule daa_meganizer:
-    message: "MEGAN6 LCA 物种分类",
+    message:
+        "MEGAN6 LCA 物种分类"
     input:
         rules.diamond_nr_miro.output,
     output:
-        flag="taxon_classification/diamond_nr_miro.daa.meganized"
+        flag="taxon_classification/diamond_nr_miro.daa.meganized",
     benchmark:
         ".log/taxon_classification/daa_meganizer.bm"
     log:
@@ -55,33 +56,35 @@ rule daa_meganizer:
 
 
 rule daa2info:
-    message: "提取 NCBI 分类信息",
+    message:
+        "提取 NCBI 分类信息"
     input:
         flag=rules.daa_meganizer.output.flag,
         daa="taxon_classification/diamond_nr_miro.daa",
     output:
-        "taxon_classification/diamond_nr_miro.daa.meganized.info"
+        "taxon_classification/diamond_nr_miro.daa.meganized.info",
     benchmark:
         ".log/taxon_classification/daa2info.bm"
     log:
         ".log/taxon_classification/daa2info.log",
     conda:
         config["conda"]["megan6"]
+    params:
+        extra=config["params"]["daa2info"],
     threads: config["threads"]["max"]
     shell:
-        # 提取NCBI分类信息
-        # -o 输出的文件中即每条序列的物种注释信息
-        "daa2info -i {input.daa} -o {output} -l -m -r2c Taxonomy -p true -r true 2> {log}"
+        "daa2info -i {input.daa} -o {output} {params.extra} 2> {log}"
 
 
 rule make_krona_input:
-    message: "生成 krona 输入文件和 lineage 丰度明细文件",
+    message:
+        "生成 krona 输入文件和 lineage 丰度明细文件"
     input:
         megan=rules.daa2info.output[0],
         abund=rules.sample_gene_abundance.output[0],
     output:
         krona="taxon_classification/krona_input/{sample}.txt",
-        detail="taxon_classification/{sample}.linage_abund.txt"
+        detail="taxon_classification/{sample}.linage_abund.txt",
     benchmark:
         ".log/taxon_classification/{sample}.make_krona_input.bm"
     log:
@@ -93,9 +96,10 @@ rule make_krona_input:
 
 
 rule krona_ktImportText:
-    message: "运行 krona 所有样本合并输入",
+    message:
+        "运行 krona 所有样本合并输入"
     input:
-        expand("taxon_classification/krona_input/{sample}.txt", sample=samples)
+        expand("taxon_classification/krona_input/{sample}.txt", sample=samples),
     output:
         "upload/all.krona.html",
     benchmark:

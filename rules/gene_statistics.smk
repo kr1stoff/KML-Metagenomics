@@ -1,5 +1,6 @@
 rule gene_stats:
-    message: "Gene catalogue 基本信息统计表 + 长度分布统计图",
+    message:
+        "Gene catalogue 基本信息统计表 + 长度分布统计图"
     input:
         rules.gene_catalogue_unigene.output.unigene,
     output:
