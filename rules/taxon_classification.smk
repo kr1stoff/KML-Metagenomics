@@ -2,6 +2,7 @@ rule diamond_nr_miro:
     input:
         rules.gene_catalogue_unigene.output.unigene,
     output:
+        # todo 测试后 temp() 中间文件
         "taxon_classification/diamond_nr_miro.daa",
     benchmark:
         ".log/taxon_classification/diamond_nr_miro.bm"
@@ -84,7 +85,7 @@ rule make_krona_input:
         abund=rules.sample_gene_abundance.output[0],
     output:
         krona="taxon_classification/krona_input/{sample}.txt",
-        detail="taxon_classification/{sample}.linage_abund.txt",
+        detail="taxon_classification/linage_abund/{sample}.txt",
     benchmark:
         ".log/taxon_classification/{sample}.make_krona_input.bm"
     log:
@@ -110,3 +111,62 @@ rule krona_ktImportText:
         config["conda"]["krona"]
     shell:
         "ktImportText {input} -o {output} 2> {log}"
+
+
+rule make_taxon_abund_matrix:
+    message:
+        "生成物种丰度矩阵和物种基因数矩阵"
+    input:
+        expand("taxon_classification/linage_abund/{sample}.txt", sample=samples),
+    output:
+        # common.smk 中的 RANKS,KINDS 用于下游流程输入使用
+        "taxon_classification/taxon_abund_matrix/{rank}.{kind}.txt",
+    wildcard_constraints:
+        rank="K|P|C|O|F|G|S",
+        kind="gene|abund",
+    log:
+        ".log/taxon_classification/make_taxon_abund_matrix-{rank}-{kind}.log",
+    benchmark:
+        ".log/taxon_classification/make_taxon_abund_matrix-{rank}-{kind}.bm"
+    conda:
+        config["conda"]["python"]
+    script:
+        "../scripts/make_taxon_abund_matrix.py"
+
+
+rule plot_taxon_abund_top_bar:
+    message:
+        "绘制物种丰度 Top10 柱状图"
+    input:
+        "taxon_classification/taxon_abund_matrix/{rank}.abund.txt",
+    output:
+        "upload/taxon_plot/{rank}.abund.top_bar.png",
+    log:
+        ".log/taxon_classification/taxon_plot/plot_taxon_abund_top_bar-{rank}.log",
+    benchmark:
+        ".log/taxon_classification/taxon_plot/plot_taxon_abund_top_bar-{rank}.bm"
+    params:
+        top=10,
+    conda:
+        config["conda"]["python"]
+    script:
+        "../scripts/plot_taxon_abund_top_bar.py"
+
+
+rule plot_taxon_top_heatmap:
+    message:
+        "绘制物种丰度 Top30 热图"
+    input:
+        rules.make_taxon_abund_matrix.output,
+    output:
+        "upload/taxon_plot/{rank}.{kind}.top_heatmap.png",
+    log:
+        ".log/taxon_classification/taxon_plot/plot_taxon_top_heatmap-{rank}-{kind}.log"
+    benchmark:
+        ".log/taxon_classification/taxon_plot/plot_taxon_top_heatmap-{rank}-{kind}.bm"
+    params:
+        top=30,
+    conda:
+        config["conda"]["python"]
+    script:
+        "../scripts/plot_taxon_top_heatmap.py"

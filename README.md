@@ -40,13 +40,14 @@
 - ⌛️20260824 - eggNOG  
    在 `meta` 环境
 
-- ⌛️20260824 - krona
+- ✅20260824 - krona
    - 准备 krona 输入, 顺便输出样本注释后物种, 层级, 丰富度信息表. `/data/mengxf/Develop/KML260617-MetaGenomics/work/260819-classification/make_krona_input.py`
    - 运行多样本 krona
       ```bash
       mamba -n meta run ktImportText SRR23604277.krona_input.txt SRR23604277.krona_input.txt2
       ```
-- 🔄20260825 - 统一格式化 megan6 物种输出, 门[P]是可以对齐的, 域[D]/界[K] 都归为界[K]
+
+- ✅20260825 - 统一格式化 megan6 物种输出, 门[P]是可以对齐的, 域[D]/界[K] 都归为界[K]
    - 细菌(Bacteria),古菌(Archaea): 细菌古菌是域. "[D] Bacteria; [P] Firmicutes; [C] Clostridia; [O] Eubacteriales;" 门[P]上面是域[D]
    - 真菌(Fungi): 真菌是界, 门上面是界[K]
    - 病毒(Viruses)所有界
@@ -64,7 +65,7 @@
       Zilligvirae
       ```
 
-- 20260821 - diamond(daa) + megan6
+- ✅20260821 - diamond(daa) + megan6
    ```bash
    # daa-meganizer 就地修改, 直接修改输入文件
    mamba -n meta run daa-meganizer -i test.daa -mdb /data/mengxf/Database/MEGAN6/megan-map-Feb2022.db --longReads --threads 32

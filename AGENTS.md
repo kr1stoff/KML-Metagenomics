@@ -129,3 +129,40 @@ KML-Metagenomics/
 - `gunzip` 为原始样本数据存在压缩问题时设置的解压步骤（已设为 `temp()` 自动清理）。若 megahit 支持直接读取 gz 输入，可跳过此步。
 - 原始脚本中 megahit 输出目录为 `<sample>_megahit`，但下游 seqtk 读取路径为 `megahit/`，本项目已统一修正为 `<sample>_megahit`。
 - 去宿主的 SAM 文件仅作中间产物，已设为 `temp()`，不影响后续分析。
+
+## AI 协作准则
+
+遵循 `E:\xiangfu.meng\AGENTS\AI_RULES` 中的个人准则，要点如下。
+
+### 编程准则
+
+1. `Python` 代码遵循 `PEP-8` 规范，不要写抽象代码。
+2. 不要设计抽象复杂的代码单元，代码简单直接。
+3. 不要造无用的轮子，效率优先。
+4. 除非明确要求，否则不要写 `argparse` 或 `click` 之类的命令行参数。
+5. 测试运行的输入不要写到输入文件的目录，所有的增改删都在当前工作目录执行。
+6. 任何删除、修改现有文件的操作都要先经过我同意。
+
+### 代码风格
+
+1. 除基础元素赋值或简单逻辑外，逐行写注释。
+2. 类和函数输入输出参数要标明类型。
+
+### 分析习惯
+
+1. 每次执行完分析都总结后追加更新到工作目录下的 `AGENTS.md` 文件，如果不存在则新建。
+2. `Python` 表格处理优先用 `pandas`，作图用 `seaborn` 和 `matplotlib`，无法实现或提示词有明确指定库的情况除外。
+3. 输入数据文件过大时，不要都读进缓存，读部分看大概数据结构。
+
+### 解释器地址
+
+- Windows 个人办公电脑：`C:\Users\xiangfu.meng\AppData\Local\miniconda3\envs\python3.12\python.exe`
+- Ubuntu 服务器：`/home/mengxf/miniforge3/envs/python3.12/bin/python`
+
+## 更新记录
+
+### 2026-08-27 分类明细 abund_cum 保留小数
+
+- 问题：`scripts/make_krona_input.py` 输出的基因分类明细表中出现 `gene_cum > abund_cum`，看似不合理。
+- 原因：`gene_cum` 是基因个数（count），`abund_cum` 是 `norm_abund` 之和（sum），量纲不同，不可直接比较。`norm_abund = reads / gene_len / total_reads * 10^9`，单个基因的值可为 <1 的小数，低丰度基因聚集的分类节点天然满足 `gene_cum > abund_cum`，属正常现象。
+- 修改：`abund_cum` 不再 `astype(int)` 向下取整，保留小数，避免丰度 <1 的节点被截断为 0 造成观感异常；`gene_cum` 仍为整数。

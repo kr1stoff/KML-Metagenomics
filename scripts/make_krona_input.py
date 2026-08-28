@@ -149,6 +149,9 @@ def main() -> None:
                         on='lineage', how='left')
     detail['gene_direct'] = detail['gene_direct'].fillna(0).astype(int)
     detail['abund_direct'] = detail['abund_direct'].fillna(0.0)
+    # gene_cum 为基因个数转为整数; abund_cum 保留小数 (norm_abund 可为 <1 的小数, 取整会失真)
+    # abund_cum 是 RPKM, 小于 gene_cum 是正常情况
+    detail['gene_cum'] = detail['gene_cum'].astype(int)
     detail.to_csv(DETAIL_OUT, sep='\t', index=False)
 
     # 打印统计信息

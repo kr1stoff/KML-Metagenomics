@@ -6,9 +6,11 @@ KML-Metagenomics 宏基因组分析流程
 import pandas as pd
 
 
+# 配置文件
 configfile: workflow.source_path("config.yaml")
 
 
+# 配置文件校验
 config_schema: workflow.source_path("config.schema.yaml")
 
 # 读取样本表
@@ -17,10 +19,20 @@ samples_df.columns = ["sample", "fq1", "fq2"]
 samples = samples_df["sample"].tolist()
 
 
+# 导入公共规则
+include: "rules/common.smk"
+
+
 rule all:
     input:
         # 分类
         "upload/all.krona.html",
+        expand("upload/taxon_plot/{rank}.abund.top_bar.png", rank=RANKS),
+        expand(
+            "upload/taxon_plot/{rank}.{kind}.top_heatmap.png",
+            rank=RANKS,
+            kind=KINDS,
+        ),
         # 基因丰度
         "gene_quantification/gene_reads_table.tsv",
         "upload/gene_catalogue_stats.xlsx",
