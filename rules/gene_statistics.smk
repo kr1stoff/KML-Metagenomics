@@ -31,26 +31,26 @@ rule core_pan_stats:
         "../scripts/core_pan_stats.py"
 
 
-rule gene_abundance_heatmap:
+rule plot_gene_abundance_heatmap:
     input:
         rules.gene_abundance_table.output[0],
     output:
         png="upload/gene_abundance_heatmap.png",
         csv="upload/gene_abundance_heatmap.csv",
     benchmark:
-        ".log/gene_statistics/gene_abundance_heatmap.bm"
+        ".log/gene_statistics/plot_gene_abundance_heatmap.bm"
     log:
-        ".log/gene_statistics/gene_abundance_heatmap.log",
+        ".log/gene_statistics/plot_gene_abundance_heatmap.log",
     conda:
         config["conda"]["python"]
     params:
         # 支持 "spearman", "pearson" 两种算法
         method="spearman",
     script:
-        "../scripts/gene_abundance_heatmap.py"
+        "../scripts/plot_gene_abundance_heatmap.py"
 
 
-rule gene_count_boxplot:
+rule plot_gene_count_boxplot:
     input:
         abund=rules.gene_abundance_table.output[0],
         meta=config["metadata"],
@@ -58,16 +58,16 @@ rule gene_count_boxplot:
         png="upload/groups_gene_count_boxplot.png",
         csv="upload/groups_gene_count_boxplot.csv",
     benchmark:
-        ".log/gene_statistics/gene_count_boxplot.bm"
+        ".log/gene_statistics/plot_gene_count_boxplot.bm"
     log:
-        ".log/gene_statistics/gene_count_boxplot.log",
+        ".log/gene_statistics/plot_gene_count_boxplot.log",
     conda:
         config["conda"]["python"]
     script:
-        "../scripts/gene_count_boxplot.py"
+        "../scripts/plot_gene_count_boxplot.py"
 
 
-rule gene_venn:
+rule plot_gene_venn:
     input:
         abund=rules.gene_abundance_table.output[0],
         meta=config["metadata"],
@@ -75,10 +75,10 @@ rule gene_venn:
         png="upload/groups_gene_venn.png",
         csv="upload/groups_gene_venn.csv",
     benchmark:
-        ".log/gene_statistics/gene_venn.bm"
+        ".log/gene_statistics/plot_gene_venn.bm"
     log:
-        ".log/gene_statistics/gene_venn.log",
+        ".log/gene_statistics/plot_gene_venn.log",
     conda:
         config["conda"]["python"]
     script:
-        "../scripts/gene_venn.py"
+        "../scripts/plot_gene_venn.py"

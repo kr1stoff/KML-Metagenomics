@@ -37,8 +37,33 @@
 - 去宿主的 SAM 文件仅作中间产物，已设为 `temp()`，不影响后续分析。
 
 ## 开发
-- ⌛️20260824 - eggNOG  
-   在 `meta` 环境
+- 🔄20260828 VFDB  
+   Adr1 (VF0496) - Immune modulation (VFC0258)  
+   '-' 前面是 level2 后面是 level1
+- 🔄20260824 - eggNOG  
+   `emapper` 在 `meta` 环境
+   ```bash
+   # 比对
+   mamba -n eggnog run emapper.py \
+      -m diamond \
+      --cpu 32 \
+      --override \
+      --no_annot \
+      --no_file_comments \
+      --itype metagenome \
+      --data_dir /data/mengxf/Database/eggNOG \
+      -i demo.fa \
+      -o emapper_out
+
+   # 注释
+   mamba -n eggnog run emapper.py \
+   --cpu 32 \
+   --override \
+   --annotate_hits_table emapper_out.emapper.seed_orthologs \
+   --no_file_comments \
+   --data_dir /data/mengxf/Database/eggNOG \
+   -o emapper_anno_ou
+   ```
 
 - ✅20260824 - krona
    - 准备 krona 输入, 顺便输出样本注释后物种, 层级, 丰富度信息表. `/data/mengxf/Develop/KML260617-MetaGenomics/work/260819-classification/make_krona_input.py`
